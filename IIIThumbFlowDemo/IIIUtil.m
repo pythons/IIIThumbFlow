@@ -99,11 +99,16 @@
     size_t bytesPerRow = ((bitsPerComp * width) / 8) * compPerPix;
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef ctx = CGBitmapContextCreate(&pixelData, width, height, bitsPerComp, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
+    
+    CGColorSpaceRelease(colorSpace);
     // create image
-    CGImageRef image = CGBitmapContextCreateImage(ctx);
-    return [[UIImage alloc] initWithCGImage:image];
+    CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
+    UIImage *image =  [[UIImage alloc] initWithCGImage:imageRef];
+    
+    CGImageRelease(imageRef);
+    CFRelease(ctx);
+    
+    return image;
 }
-
-
 
 @end
